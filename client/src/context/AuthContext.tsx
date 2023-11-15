@@ -1,5 +1,5 @@
-import { createContext, useState, useContext } from "react";
-import { registerUser } from "../api/auth";
+import { createContext, useState, useContext, useEffect } from "react";
+import { loginUser, registerUser } from "../api";
 import { UserInput } from "../types";
 import { UserDataResponse } from "../types/userDataResponse";
 import { AxiosError } from "axios";
@@ -10,6 +10,7 @@ export interface AuthContextProps {
   isAuthenticated: boolean;
   errors: string[];
   signup: (values: UserInput) => Promise<void>;
+  signin: (values: UserInput) => Promise<void>;
   //setUser: React.Dispatch<React.SetStateAction<UserDataResponse | null>>;
 }
 
@@ -33,6 +34,15 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [errors, setErrors] = useState<string[]>([]);
 
+  useEffect(() => {
+    if (errors.length > 0) {
+      const timer = setTimeout(() => {
+        setErrors([]);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [errors]);
+
   const signup = async (values: UserInput) => {
     try {
       const response = await registerUser(values);
@@ -44,8 +54,19 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const signin = async (values: UserInput) => {
+    try {
+      const response = await loginUser(values);
+    } catch (error) {
+      const parsedErrorMessages = parseErrors(error as AxiosError);
+      setErrors(parsedErrorMessages);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, errors, signup }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, errors, signup, signin }}
+    >
       {children}
     </AuthContext.Provider>
   );

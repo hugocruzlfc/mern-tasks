@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
-import { UserInput } from "../types";
+import { AuthNavigationLabel, UserInput } from "../types";
 import { useNavigate } from "react-router-dom";
 import { AUTH_CONTAINER_CLASS, INPUT_CLASS } from "../utils";
-import { Alerts, AuthCards } from "../components";
+import { Alerts, AuthCards, AuthNavigation } from "../components";
 
 export interface RegisterProps {}
 
@@ -29,7 +29,7 @@ const Register: React.FC<RegisterProps> = ({}) => {
 
   return (
     <div className={`${AUTH_CONTAINER_CLASS}`}>
-      <Alerts registerErrors={registerErrors} />
+      <Alerts errors={registerErrors} />
       <AuthCards title="Register">
         <form onSubmit={onSubmit}>
           <input
@@ -73,6 +73,7 @@ const Register: React.FC<RegisterProps> = ({}) => {
             Register
           </button>
         </form>
+        <AuthNavigation goTo={AuthNavigationLabel.Login} />
       </AuthCards>
     </div>
   );

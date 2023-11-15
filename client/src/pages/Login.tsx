@@ -1,25 +1,28 @@
 import React from "react";
 import { AUTH_CONTAINER_CLASS, INPUT_CLASS } from "../utils";
 import { useForm } from "react-hook-form";
-import { Alerts, AuthCards } from "../components";
+import { Alerts, AuthCards, AuthNavigation } from "../components";
+import { useAuth } from "../context/AuthContext";
+import { AuthNavigationLabel } from "../types";
 
 export interface LoginProps {}
 
 const Login: React.FC<LoginProps> = ({}) => {
+  const { errors: signinErrors, signin } = useAuth();
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = handleSubmit((values) => {
-    console.log(values);
+  const onSubmit = handleSubmit(async (values) => {
+    const response = await signin(values);
+    console.log(response);
   });
 
   return (
     <div className={`${AUTH_CONTAINER_CLASS}`}>
-      {/* <Alerts registerErrors={registerErrors} /> */}
-
+      <Alerts errors={signinErrors} />
       <AuthCards title="Login">
         <form onSubmit={onSubmit}>
           <input
@@ -50,6 +53,7 @@ const Login: React.FC<LoginProps> = ({}) => {
             Login
           </button>
         </form>
+        <AuthNavigation goTo={AuthNavigationLabel.Register} />
       </AuthCards>
     </div>
   );

@@ -1,13 +1,13 @@
 import React from "react";
 
 export interface AlertsProps {
-  registerErrors: string[];
+  errors: string[];
 }
 
-const Alerts: React.FC<AlertsProps> = ({ registerErrors }) => {
+const Alerts: React.FC<AlertsProps> = ({ errors }) => {
   return (
     <div className="mb-10">
-      {registerErrors?.map((error, index) => (
+      {errors?.map((error, index) => (
         <div
           className="alert alert-error my-2"
           key={index}

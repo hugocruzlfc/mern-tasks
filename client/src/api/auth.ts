@@ -1,7 +1,11 @@
 import axios from "axios";
+import { API_URL } from "../utils";
+import { UserInput } from "../types";
 
-const API_URL = "http://localhost:4000/api";
-
-export const registerUser = async (newUser: any) => {
+export const registerUser = async (newUser: UserInput) => {
   return await axios.post(`${API_URL}/register`, newUser);
+};
+
+export const loginUser = async (newUser: UserInput) => {
+  return await axios.post(`${API_URL}/login`, newUser);
 };
