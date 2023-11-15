@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { registerUser } from "../api/auth";
+import { useAuth } from "../context/AuthContext";
+import { UserInput } from "../types";
+import { useNavigate } from "react-router-dom";
 
 export interface RegisterProps {}
 
@@ -8,11 +10,23 @@ const INPUT_CLASS =
   "w-full bg-zinc-700 border px-4 p-2 rounded-md text-white my-2";
 
 const Register: React.FC<RegisterProps> = ({}) => {
-  const { register, handleSubmit } = useForm();
+  const { signup, isAuthenticated } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/tasks");
+    }
+  }, [isAuthenticated]);
 
   const onSubmit = handleSubmit(async (values) => {
-    const user = await registerUser(values);
-    console.log(user);
+    console.log(values);
+    await signup(values as UserInput);
   });
 
   return (
@@ -47,7 +61,7 @@ const Register: React.FC<RegisterProps> = ({}) => {
         />
         <button
           type="submit"
-          className="text-white"
+          className="btn btn-outline"
         >
           Register
         </button>
