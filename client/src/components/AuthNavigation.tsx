@@ -10,8 +10,6 @@ export interface AuthNavigationProps {
 const AuthNavigation: React.FC<AuthNavigationProps> = ({ goTo }) => {
   const description = AUTH_NAVIGATION_DESCRIPTIONS.get(goTo);
 
-  console.log(description);
-
   return (
     <p className="flex flex-x-2 justify-between mt-2">
       {description}

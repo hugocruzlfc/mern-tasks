@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
-import { Login, Register } from "./pages";
+import { Home, Login, Profile, Register, Task, TaskForm, Tasks } from "./pages";
 import AuthProvider from "./context/AuthContext";
+import { ProtectedRoutes } from "./routes";
 
 function App() {
   return (
@@ -8,9 +9,7 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={
-            <h1 className="text-3xl font-bold underline">Hello world!</h1>
-          }
+          element={<Home />}
         />
         <Route
           path="/login"
@@ -20,30 +19,24 @@ function App() {
           path="/register"
           element={<Register />}
         />
-        <Route
-          path="/tasks"
-          element={
-            <h1 className="text-3xl font-bold underline">Hello world!</h1>
-          }
-        />
-        <Route
-          path="/add-task"
-          element={
-            <h1 className="text-3xl font-bold underline">Hello world!</h1>
-          }
-        />
-        <Route
-          path="/tasks/:id"
-          element={
-            <h1 className="text-3xl font-bold underline">Hello world!</h1>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <h1 className="text-3xl font-bold underline">Hello world!</h1>
-          }
-        />
+        <Route element={<ProtectedRoutes />}>
+          <Route
+            path="/tasks"
+            element={<Tasks />}
+          />
+          <Route
+            path="/add-task"
+            element={<TaskForm />}
+          />
+          <Route
+            path="/tasks/:id"
+            element={<Task />}
+          />
+          <Route
+            path="/profile"
+            element={<Profile />}
+          />
+        </Route>
       </Routes>
     </AuthProvider>
   );

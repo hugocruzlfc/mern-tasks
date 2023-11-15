@@ -41,6 +41,15 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }, 5000);
       return () => clearTimeout(timer);
     }
+  }, []);
+
+  useEffect(() => {
+    if (errors.length > 0) {
+      const timer = setTimeout(() => {
+        setErrors([]);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
   }, [errors]);
 
   const signup = async (values: UserInput) => {
@@ -57,6 +66,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signin = async (values: UserInput) => {
     try {
       const response = await loginUser(values);
+      setUser(response.data);
+      setIsAuthenticated(true);
     } catch (error) {
       const parsedErrorMessages = parseErrors(error as AxiosError);
       setErrors(parsedErrorMessages);

@@ -4,10 +4,12 @@ import { useForm } from "react-hook-form";
 import { Alerts, AuthCards, AuthNavigation } from "../components";
 import { useAuth } from "../context/AuthContext";
 import { AuthNavigationLabel } from "../types";
+import { useNavigate } from "react-router-dom";
 
 export interface LoginProps {}
 
 const Login: React.FC<LoginProps> = ({}) => {
+  const navigate = useNavigate();
   const { errors: signinErrors, signin } = useAuth();
   const {
     handleSubmit,
@@ -16,8 +18,8 @@ const Login: React.FC<LoginProps> = ({}) => {
   } = useForm();
 
   const onSubmit = handleSubmit(async (values) => {
-    const response = await signin(values);
-    console.log(response);
+    await signin(values);
+    navigate("/");
   });
 
   return (
