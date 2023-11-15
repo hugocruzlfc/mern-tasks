@@ -2,10 +2,13 @@ import { createContext, useState, useContext } from "react";
 import { registerUser } from "../api/auth";
 import { UserInput } from "../types";
 import { UserDataResponse } from "../types/userDataResponse";
+import { AxiosError } from "axios";
+import { parseErrors } from "../utils";
 
 export interface AuthContextProps {
   user: UserDataResponse | null;
   isAuthenticated: boolean;
+  errors: string[];
   signup: (values: UserInput) => Promise<void>;
   //setUser: React.Dispatch<React.SetStateAction<UserDataResponse | null>>;
 }
@@ -28,20 +31,21 @@ export interface AuthProviderProps {
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserDataResponse | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [errors, setErrors] = useState<string[]>([]);
 
   const signup = async (values: UserInput) => {
     try {
       const response = await registerUser(values);
-      console.log(response);
       setUser(response.data);
       setIsAuthenticated(true);
     } catch (error) {
-      console.log(error);
+      const parsedErrorMessages = parseErrors(error as AxiosError);
+      setErrors(parsedErrorMessages);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signup }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, errors, signup }}>
       {children}
     </AuthContext.Provider>
   );

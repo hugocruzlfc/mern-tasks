@@ -5,7 +5,7 @@ export const getTasks = async (req, res) => {
     const tasks = await Task.find({ user: req.user.id }).populate("user");
     res.json(tasks);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: [error.message] });
   }
 };
 
@@ -20,7 +20,7 @@ export const createTask = async (req, res) => {
     await newTask.save();
     res.json(newTask);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: [error.message] });
   }
 };
 
@@ -32,7 +32,7 @@ export const deleteTaskById = async (req, res) => {
 
     return res.sendStatus(204);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: [error.message] });
   }
 };
 
@@ -46,7 +46,7 @@ export const updateTaskById = async (req, res) => {
     );
     return res.json(taskUpdated);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: [error.message] });
   }
 };
 
@@ -56,6 +56,6 @@ export const getTaskById = async (req, res) => {
     if (!task) return res.status(404).json({ message: "Task not found" });
     return res.json(task);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: [error.message] });
   }
 };

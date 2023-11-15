@@ -19,7 +19,6 @@ export const registerSchema = z.object({
   password: z
     .string({
       required_error: "Password is required",
-      invalid_type_error: "Name must be a string",
     })
     .min(6, {
       message: "Password must be at least 6 characters",

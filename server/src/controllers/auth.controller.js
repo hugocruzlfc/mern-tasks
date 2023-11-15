@@ -43,7 +43,7 @@ export const register = async (req, res) => {
       email: userSaved.email,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: [error.message] });
   }
 };
 
@@ -81,7 +81,7 @@ export const login = async (req, res) => {
       email: userFound.email,
     });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: [error.message] });
   }
 };
 
@@ -99,7 +99,7 @@ export const verifyToken = async (req, res) => {
       email: userFound.email,
     });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: [error.message] });
   }
 };
 
@@ -112,6 +112,6 @@ export const logout = async (req, res) => {
     });
     res.sendStatus(200);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: [error.message] });
   }
 };
