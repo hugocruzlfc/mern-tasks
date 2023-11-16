@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { loginUser, registerUser } from "../api";
+import { loginUser, registerUser, verifyToken } from "../api";
 import { AlertMessage, UserInput } from "../types";
 import { UserDataResponse } from "../types/userDataResponse";
 import { AxiosError } from "axios";
@@ -39,8 +39,22 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [errors, setErrors] = useState<AlertMessage | null>(null);
 
   useEffect(() => {
-    const cookies = Cookies.get("token");
+    checkAuth();
   }, []);
+
+  const checkAuth = async () => {
+    try {
+      const cookieToken = Cookies.get("token");
+      if (cookieToken) {
+        const response = await verifyToken();
+        handleUpdateStates(response.data);
+      }
+    } catch (error) {
+      const parsedErrorMessages = parseErrors(error as AxiosError);
+      setErrors({ error: parsedErrorMessages });
+      handleUpdateStates();
+    }
+  };
 
   // useEffect(() => {
   //   if (errors) {
@@ -55,11 +69,11 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const toastLoading = toast.loading("Loading data");
     try {
       const response = await registerUser(values);
-      setUser(response.data);
-      setIsAuthenticated(true);
+      handleUpdateStates(response.data);
     } catch (error) {
       const parsedErrorMessages = parseErrors(error as AxiosError);
       setErrors({ error: parsedErrorMessages });
+      handleUpdateStates();
     } finally {
       toast.dismiss(toastLoading);
     }
@@ -69,14 +83,24 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const toastLoading = toast.loading("Loading data");
     try {
       const response = await loginUser(values);
-      setUser(response.data);
-      setIsAuthenticated(true);
-      navigate("/");
+      handleUpdateStates(response.data);
+      navigate("/tasks");
     } catch (error) {
       const parsedErrorMessages = parseErrors(error as AxiosError);
       setErrors({ error: parsedErrorMessages });
+      handleUpdateStates();
     } finally {
       toast.dismiss(toastLoading);
+    }
+  };
+
+  const handleUpdateStates = (userData?: UserDataResponse) => {
+    if (userData) {
+      setUser(userData);
+      setIsAuthenticated(true);
+    } else {
+      setUser(null);
+      setIsAuthenticated(false);
     }
   };
 

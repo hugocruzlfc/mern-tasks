@@ -88,11 +88,13 @@ export const login = async (req, res) => {
 export const verifyToken = async (req, res) => {
   try {
     const { token } = req.cookies;
-    if (!token) return res.sendStatus(401);
+    if (!token) return res.status(401).json({ message: ["Unauthorized"] });
     const payload = await verifyAccessToken(token);
-    if (!payload) return res.sendStatus(401);
+    if (!payload) return res.status(401).json({ message: ["Unauthorized"] });
     const userFound = await userModel.findById(payload.id);
-    if (!userFound) return res.sendStatus(401);
+    console.log(userFound);
+    if (!userFound)
+      return res.status(404).json({ message: ["User not found"] });
     return res.json({
       id: userFound._id,
       username: userFound.username,

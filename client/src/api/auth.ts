@@ -7,3 +7,5 @@ export const registerUser = (newUser: UserInput) =>
 
 export const loginUser = (newUser: UserInput) =>
   axiosInstance.post("/login", newUser);
+
+export const verifyToken = () => axiosInstance.get("/verify");

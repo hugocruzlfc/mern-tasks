@@ -7,6 +7,8 @@ export interface ProtectedRoutesProps {}
 const ProtectedRoutes: React.FC<ProtectedRoutesProps> = () => {
   const { isAuthenticated } = useAuth();
 
+  console.log(isAuthenticated);
+
   if (!isAuthenticated)
     return (
       <Navigate
