@@ -6,6 +6,7 @@
  # Libraries
 npm i -D daisyui@latest
 npm i js-cookie
+npm i @types/js-cookie
 npm i --save-dev @types/node
 npm install sonner
 ```

@@ -1,30 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AUTH_CONTAINER_CLASS, INPUT_CLASS } from "../utils";
 import { useForm } from "react-hook-form";
-import { Alerts, AuthCards, AuthNavigation } from "../components";
+import { AuthCards, AuthNavigation } from "../components";
 import { useAuth } from "../context/AuthContext";
 import { AuthNavigationLabel } from "../types";
-import { useNavigate } from "react-router-dom";
+import { useAlerts } from "../hooks";
 
 export interface LoginProps {}
 
 const Login: React.FC<LoginProps> = ({}) => {
-  const navigate = useNavigate();
   const { errors: signinErrors, signin } = useAuth();
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
+  const handleToast = useAlerts();
+
+  useEffect(() => {
+    if (signinErrors) {
+      handleToast(signinErrors);
+    }
+  }, [signinErrors]);
 
   const onSubmit = handleSubmit(async (values) => {
     await signin(values);
-    navigate("/");
   });
 
   return (
     <div className={`${AUTH_CONTAINER_CLASS}`}>
-      <Alerts errors={signinErrors} />
       <AuthCards title="Login">
         <form onSubmit={onSubmit}>
           <input
@@ -42,7 +46,7 @@ const Login: React.FC<LoginProps> = ({}) => {
             placeholder="Password"
             {...register("password", {
               required: true,
-              minLength: 6,
+              minLength: 2,
             })}
           />
           {errors.password && (

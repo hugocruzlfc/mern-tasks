@@ -4,7 +4,8 @@ import { useAuth } from "../context/AuthContext";
 import { AuthNavigationLabel, UserInput } from "../types";
 import { useNavigate } from "react-router-dom";
 import { AUTH_CONTAINER_CLASS, INPUT_CLASS } from "../utils";
-import { Alerts, AuthCards, AuthNavigation } from "../components";
+import { AuthCards, AuthNavigation } from "../components";
+import { useAlerts } from "../hooks";
 
 export interface RegisterProps {}
 
@@ -16,6 +17,13 @@ const Register: React.FC<RegisterProps> = ({}) => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
+  const handleToast = useAlerts();
+
+  useEffect(() => {
+    if (registerErrors) {
+      handleToast(registerErrors);
+    }
+  }, [registerErrors]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -29,7 +37,6 @@ const Register: React.FC<RegisterProps> = ({}) => {
 
   return (
     <div className={`${AUTH_CONTAINER_CLASS}`}>
-      <Alerts errors={registerErrors} />
       <AuthCards title="Register">
         <form onSubmit={onSubmit}>
           <input

@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { Home, Login, Profile, Register, Task, TaskForm, Tasks } from "./pages";
 import AuthProvider from "./context/AuthContext";
 import { ProtectedRoutes } from "./routes";
+import { Toaster } from "sonner";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           />
         </Route>
       </Routes>
+      <Toaster />
     </AuthProvider>
   );
 }
