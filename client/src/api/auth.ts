@@ -1,11 +1,9 @@
-import axios from "axios";
-import { API_URL } from "../utils";
+import { axiosInstance } from "./axios";
+
 import { UserInput } from "../types";
 
-export const registerUser = async (newUser: UserInput) => {
-  return await axios.post(`${API_URL}/register`, newUser);
-};
+export const registerUser = (newUser: UserInput) =>
+  axiosInstance.post("/register", newUser);
 
-export const loginUser = async (newUser: UserInput) => {
-  return await axios.post(`${API_URL}/login`, newUser);
-};
+export const loginUser = (newUser: UserInput) =>
+  axiosInstance.post("/login", newUser);

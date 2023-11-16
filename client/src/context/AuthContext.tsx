@@ -4,6 +4,7 @@ import { UserInput } from "../types";
 import { UserDataResponse } from "../types/userDataResponse";
 import { AxiosError } from "axios";
 import { parseErrors } from "../utils";
+import Cookies from "js-cookie";
 
 export interface AuthContextProps {
   user: UserDataResponse | null;
@@ -35,12 +36,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [errors, setErrors] = useState<string[]>([]);
 
   useEffect(() => {
-    if (errors.length > 0) {
-      const timer = setTimeout(() => {
-        setErrors([]);
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
+    const cookies = Cookies.get("token");
   }, []);
 
   useEffect(() => {
