@@ -1,1 +1,4 @@
-export { default as ProtectedRoutes } from "./ProtectedRoutes";
+export { default as AppRouter } from "./AppRouter";
+
+export * from "./privateRoutes";
+export * from "./publicRoutes";

@@ -5,10 +5,12 @@ import { AuthCards, AuthNavigation } from "../components";
 import { useAuth } from "../context/AuthContext";
 import { AuthNavigationLabel } from "../types";
 import { useAlerts } from "../hooks";
+import { useNavigate } from "react-router-dom";
 
 export interface LoginProps {}
 
 const Login: React.FC<LoginProps> = ({}) => {
+  const navigate = useNavigate();
   const { errors: signinErrors, signin } = useAuth();
   const {
     handleSubmit,
@@ -25,6 +27,7 @@ const Login: React.FC<LoginProps> = ({}) => {
 
   const onSubmit = handleSubmit(async (values) => {
     await signin(values);
+    navigate("/tasks");
   });
 
   return (

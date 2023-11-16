@@ -1,16 +1,16 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { loginUser, registerUser, verifyToken } from "../api";
-import { AlertMessage, UserInput } from "../types";
+import { AlertMessage, AuthStatus, UserInput } from "../types";
 import { UserDataResponse } from "../types/userDataResponse";
 import { AxiosError } from "axios";
 import { parseErrors } from "../utils";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { set } from "react-hook-form";
 
 export interface AuthContextProps {
   user: UserDataResponse | null;
-  isAuthenticated: boolean;
+  authStatus: AuthStatus;
   errors: AlertMessage | null;
   signup: (values: UserInput) => Promise<void>;
   signin: (values: UserInput) => Promise<void>;
@@ -33,28 +33,14 @@ export interface AuthProviderProps {
 }
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const navigate = useNavigate();
   const [user, setUser] = useState<UserDataResponse | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [authStatus, setAuthStatus] = useState<AuthStatus>("checking");
   const [errors, setErrors] = useState<AlertMessage | null>(null);
+  const cookieToken = Cookies.get("token");
 
   useEffect(() => {
     checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    try {
-      const cookieToken = Cookies.get("token");
-      if (cookieToken) {
-        const response = await verifyToken();
-        handleUpdateStates(response.data);
-      }
-    } catch (error) {
-      const parsedErrorMessages = parseErrors(error as AxiosError);
-      setErrors({ error: parsedErrorMessages });
-      handleUpdateStates();
-    }
-  };
+  }, [cookieToken]);
 
   // useEffect(() => {
   //   if (errors) {
@@ -84,7 +70,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const response = await loginUser(values);
       handleUpdateStates(response.data);
-      navigate("/tasks");
     } catch (error) {
       const parsedErrorMessages = parseErrors(error as AxiosError);
       setErrors({ error: parsedErrorMessages });
@@ -97,17 +82,32 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const handleUpdateStates = (userData?: UserDataResponse) => {
     if (userData) {
       setUser(userData);
-      setIsAuthenticated(true);
+      setAuthStatus("authenticated");
     } else {
       setUser(null);
-      setIsAuthenticated(false);
+      setAuthStatus("no-authenticated");
+    }
+  };
+
+  const checkAuth = async () => {
+    setAuthStatus("checking");
+    if (cookieToken) {
+      const toastLoading = toast.loading("Loading data");
+      try {
+        const response = await verifyToken();
+        handleUpdateStates(response.data);
+      } catch (error) {
+        handleUpdateStates();
+      } finally {
+        toast.dismiss(toastLoading);
+      }
+    } else {
+      handleUpdateStates();
     }
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, isAuthenticated, errors, signup, signin }}
-    >
+    <AuthContext.Provider value={{ user, authStatus, errors, signup, signin }}>
       {children}
     </AuthContext.Provider>
   );

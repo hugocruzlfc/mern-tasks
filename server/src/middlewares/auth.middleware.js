@@ -7,12 +7,12 @@ export const authRequired = async (req, res, next) => {
     if (!token)
       return res
         .status(401)
-        .json({ message: "No token, authorization denied" });
+        .json({ message: ["No token, authorization denied"] });
 
     const payload = await verifyAccessToken(token);
     req.user = payload;
     next();
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: [error.message] });
   }
 };
