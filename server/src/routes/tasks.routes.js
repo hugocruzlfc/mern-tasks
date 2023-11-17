@@ -20,6 +20,6 @@ router.post(
   createTask
 );
 router.delete("/tasks/:id", authRequired, deleteTaskById);
-router.put("/tasks/:id", authRequired, updateTaskById);
+router.patch("/tasks/:id", authRequired, updateTaskById);
 
 export default router;

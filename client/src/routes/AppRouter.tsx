@@ -1,11 +1,11 @@
 import React from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuthContext } from "../context";
 import { BrowserRouter, Route, RouteObject, Routes } from "react-router-dom";
 import { publicRoutes } from "./publicRoutes";
 import { privateRoutes } from "./privateRoutes";
 
 const AppRouter: React.FC = () => {
-  const { authStatus } = useAuth();
+  const { authStatus } = useAuthContext();
 
   if (authStatus === "checking") {
     return null;

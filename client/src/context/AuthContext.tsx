@@ -1,12 +1,16 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { loginUser, registerUser, verifyToken } from "../api";
-import { AlertMessage, AuthStatus, UserInput } from "../types";
+import {
+  AlertMessage,
+  AuthStatus,
+  TOAST_DESCRIPTIONS,
+  UserInput,
+} from "../types";
 import { UserDataResponse } from "../types/userDataResponse";
 import { AxiosError } from "axios";
 import { parseErrors } from "../utils";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
-import { set } from "react-hook-form";
 
 export interface AuthContextProps {
   user: UserDataResponse | null;
@@ -19,11 +23,11 @@ export interface AuthContextProps {
 
 export const AuthContext = createContext<AuthContextProps | null>(null);
 
-export const useAuth = () => {
+export const useAuthContext = () => {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error("useAuthContext must be used within an AuthProvider");
   }
   return context;
 };
@@ -32,7 +36,7 @@ export interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserDataResponse | null>(null);
   const [authStatus, setAuthStatus] = useState<AuthStatus>("checking");
   const [errors, setErrors] = useState<AlertMessage | null>(null);
@@ -90,20 +94,19 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const checkAuth = async () => {
+    const toastLoading = toast.loading(TOAST_DESCRIPTIONS.LOADING);
     setAuthStatus("checking");
     if (cookieToken) {
-      const toastLoading = toast.loading("Loading data");
       try {
         const response = await verifyToken();
         handleUpdateStates(response.data);
       } catch (error) {
         handleUpdateStates();
-      } finally {
-        toast.dismiss(toastLoading);
       }
     } else {
       handleUpdateStates();
     }
+    toast.dismiss(toastLoading);
   };
 
   return (
@@ -112,5 +115,3 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-export default AuthProvider;

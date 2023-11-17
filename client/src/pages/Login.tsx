@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { AUTH_CONTAINER_CLASS, INPUT_CLASS } from "../utils";
 import { useForm } from "react-hook-form";
 import { AuthCards, AuthNavigation } from "../components";
-import { useAuth } from "../context/AuthContext";
-import { AuthNavigationLabel } from "../types";
+import { useAuthContext } from "../context";
+import { AuthNavigationLabel, FormLabel } from "../types";
 import { useAlerts } from "../hooks";
 import { useNavigate } from "react-router-dom";
 
@@ -11,7 +11,7 @@ export interface LoginProps {}
 
 const Login: React.FC<LoginProps> = ({}) => {
   const navigate = useNavigate();
-  const { errors: signinErrors, signin } = useAuth();
+  const { errors: signinErrors, signin } = useAuthContext();
   const {
     handleSubmit,
     register,
@@ -32,7 +32,7 @@ const Login: React.FC<LoginProps> = ({}) => {
 
   return (
     <div className={`${AUTH_CONTAINER_CLASS}`}>
-      <AuthCards title="Login">
+      <AuthCards title={FormLabel.LOGIN}>
         <form onSubmit={onSubmit}>
           <input
             className={`${INPUT_CLASS}`}

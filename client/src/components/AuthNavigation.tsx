@@ -1,6 +1,5 @@
 import React from "react";
-import { GoToAuthNavigation } from "../types";
-import { AUTH_NAVIGATION_DESCRIPTIONS } from "../utils";
+import { AUTH_NAVIGATION_DESCRIPTIONS, GoToAuthNavigation } from "../types";
 import { Link } from "react-router-dom";
 
 export interface AuthNavigationProps {

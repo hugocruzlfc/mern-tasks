@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useAuth } from "../context/AuthContext";
-import { AuthNavigationLabel, UserInput } from "../types";
+import { useAuthContext } from "../context";
+import { AuthNavigationLabel, FormLabel, UserInput } from "../types";
 import { useNavigate } from "react-router-dom";
 import { AUTH_CONTAINER_CLASS, INPUT_CLASS } from "../utils";
 import { AuthCards, AuthNavigation } from "../components";
@@ -10,7 +10,7 @@ import { useAlerts } from "../hooks";
 export interface RegisterProps {}
 
 const Register: React.FC<RegisterProps> = ({}) => {
-  const { signup, isAuthenticated, errors: registerErrors } = useAuth();
+  const { signup, authStatus, errors: registerErrors } = useAuthContext();
   const {
     register,
     handleSubmit,
@@ -26,10 +26,10 @@ const Register: React.FC<RegisterProps> = ({}) => {
   }, [registerErrors]);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (authStatus === "authenticated") {
       navigate("/tasks");
     }
-  }, [isAuthenticated]);
+  }, [authStatus]);
 
   const onSubmit = handleSubmit(async (values) => {
     await signup(values as UserInput);
@@ -37,7 +37,7 @@ const Register: React.FC<RegisterProps> = ({}) => {
 
   return (
     <div className={`${AUTH_CONTAINER_CLASS}`}>
-      <AuthCards title="Register">
+      <AuthCards title={FormLabel.REGISTER}>
         <form onSubmit={onSubmit}>
           <input
             className={`${INPUT_CLASS}`}

@@ -1,11 +1,13 @@
 import { Toaster } from "sonner";
-import AuthProvider from "./context/AuthContext";
+import { AuthProvider, TasksProvider } from "./context";
 import { AppRouter } from "./routes";
 
 function App() {
   return (
     <AuthProvider>
-      <AppRouter />
+      <TasksProvider>
+        <AppRouter />
+      </TasksProvider>
       <Toaster />
     </AuthProvider>
   );
