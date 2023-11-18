@@ -26,8 +26,8 @@ const Login: React.FC<LoginProps> = ({}) => {
   }, [signinErrors]);
 
   const onSubmit = handleSubmit(async (values) => {
-    await signin(values);
-    navigate("/tasks");
+    const signinOk = await signin(values);
+    if (signinOk) navigate("/tasks");
   });
 
   return (

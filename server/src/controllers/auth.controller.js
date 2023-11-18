@@ -92,7 +92,6 @@ export const verifyToken = async (req, res) => {
     const payload = await verifyAccessToken(token);
     if (!payload) return res.status(401).json({ message: ["Unauthorized"] });
     const userFound = await userModel.findById(payload.id);
-    console.log(userFound);
     if (!userFound)
       return res.status(404).json({ message: ["User not found"] });
     return res.json({

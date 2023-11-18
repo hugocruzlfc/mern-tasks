@@ -1,14 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useTasksContext } from "../context";
 
 export interface TasksProps {}
 
 const Tasks: React.FC<TasksProps> = ({}) => {
-  return (
-    <div>
-      <Link to="/add-task">to TaskForm</Link>
-    </div>
-  );
+  const { tasks } = useTasksContext();
+  return <div></div>;
 };
 
 export default Tasks;

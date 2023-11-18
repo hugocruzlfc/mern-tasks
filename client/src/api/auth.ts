@@ -9,3 +9,5 @@ export const loginUser = (newUser: UserInput) =>
   axiosInstance.post("/login", newUser);
 
 export const verifyToken = () => axiosInstance.get("/verify");
+
+export const logoutUser = () => axiosInstance.post("/logout");

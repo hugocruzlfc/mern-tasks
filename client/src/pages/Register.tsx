@@ -29,60 +29,67 @@ const Register: React.FC<RegisterProps> = ({}) => {
     if (authStatus === "authenticated") {
       navigate("/tasks");
     }
-  }, [authStatus]);
+  }, []);
 
   const onSubmit = handleSubmit(async (values) => {
-    await signup(values as UserInput);
+    const signuOk = await signup(values as UserInput);
+    if (signuOk) navigate("/tasks");
   });
 
   return (
-    <div className={`${AUTH_CONTAINER_CLASS}`}>
-      <AuthCards title={FormLabel.REGISTER}>
-        <form onSubmit={onSubmit}>
-          <input
-            className={`${INPUT_CLASS}`}
-            type="text"
-            placeholder="Username"
-            {...register("username", {
-              required: true,
-              minLength: 3,
-              maxLength: 20,
-            })}
-          />
-          {errors.username && (
-            <p className="text-red-500">Username is required</p>
-          )}
-          <input
-            className={`${INPUT_CLASS}`}
-            type="email"
-            placeholder="Email"
-            {...register("email", {
-              required: true,
-            })}
-          />
-          {errors.email && <p className="text-red-500">Email is required</p>}
-          <input
-            className={`${INPUT_CLASS}`}
-            type="password"
-            placeholder="Password"
-            {...register("password", {
-              required: true,
-              minLength: 6,
-            })}
-          />
-          {errors.password && (
-            <p className="text-red-500">Password is required</p>
-          )}
-          <button
-            type="submit"
-            className="btn btn-outline p-2 my-2"
-          >
-            Register
-          </button>
-        </form>
-        <AuthNavigation goTo={AuthNavigationLabel.Login} />
-      </AuthCards>
-    </div>
+    <>
+      {authStatus !== "authenticated" && (
+        <div className={`${AUTH_CONTAINER_CLASS}`}>
+          <AuthCards title={FormLabel.REGISTER}>
+            <form onSubmit={onSubmit}>
+              <input
+                className={`${INPUT_CLASS}`}
+                type="text"
+                placeholder="Username"
+                {...register("username", {
+                  required: true,
+                  minLength: 3,
+                  maxLength: 20,
+                })}
+              />
+              {errors.username && (
+                <p className="text-red-500">Username is required</p>
+              )}
+              <input
+                className={`${INPUT_CLASS}`}
+                type="email"
+                placeholder="Email"
+                {...register("email", {
+                  required: true,
+                })}
+              />
+              {errors.email && (
+                <p className="text-red-500">Email is required</p>
+              )}
+              <input
+                className={`${INPUT_CLASS}`}
+                type="password"
+                placeholder="Password"
+                {...register("password", {
+                  required: true,
+                  minLength: 6,
+                })}
+              />
+              {errors.password && (
+                <p className="text-red-500">Password is required</p>
+              )}
+              <button
+                type="submit"
+                className="btn btn-outline p-2 my-2"
+              >
+                Register
+              </button>
+            </form>
+            <AuthNavigation goTo={AuthNavigationLabel.Login} />
+          </AuthCards>
+        </div>
+      )}
+    </>
   );
 };
 

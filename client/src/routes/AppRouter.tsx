@@ -3,6 +3,7 @@ import { useAuthContext } from "../context";
 import { BrowserRouter, Route, RouteObject, Routes } from "react-router-dom";
 import { publicRoutes } from "./publicRoutes";
 import { privateRoutes } from "./privateRoutes";
+import { Navbar } from "../components";
 
 const AppRouter: React.FC = () => {
   const { authStatus } = useAuthContext();
@@ -13,6 +14,7 @@ const AppRouter: React.FC = () => {
 
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
         {publicRoutes.map((route: RouteObject) => (
           <Route
