@@ -10,7 +10,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
 
   return (
     <nav className="bg-zinc-700 my-3 flex justify-between py-5 px-10 rounded-lg">
-      <Link to="/">
+      <Link to={authStatus === AuthStatusEnum.AUTHENTICATED ? "/tasks" : "/"}>
         <h1 className="text-2xl font-bold">Tasks Manager</h1>
       </Link>
       <ul className="flex gap-x-4">

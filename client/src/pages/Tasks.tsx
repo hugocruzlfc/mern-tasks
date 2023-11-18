@@ -8,7 +8,7 @@ const Tasks: React.FC<TasksProps> = ({}) => {
   const { tasks } = useTasksContext();
 
   return (
-    <div className="grid grid-cols-3 gap-2 pl-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 pl-4">
       {tasks.map((task) => (
         <TaskCards
           key={task._id}

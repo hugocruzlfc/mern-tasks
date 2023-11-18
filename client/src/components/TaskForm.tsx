@@ -1,29 +1,53 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect } from "react";
 import { AUTH_CONTAINER_CLASS, INPUT_CLASS } from "../utils";
-import { AuthCards } from "../components";
-import { FormLabel, TaskInput } from "../types";
+import AuthCards from "./AuthCards";
 import { useTasksContext } from "../context";
+import { useForm } from "react-hook-form";
+import { TaskDataResponse, TaskInput } from "../types";
+import { useNavigate } from "react-router-dom";
 
-export interface TaskFormProps {}
+export interface TaskFormProps {
+  formLabel: string;
+  buttonLabel: string;
+  task: TaskDataResponse | null;
+}
 
-const TaskForm: React.FC<TaskFormProps> = ({}) => {
-  const { handleCreateTask } = useTasksContext();
+export const TaskForm: React.FC<TaskFormProps> = ({
+  formLabel,
+  buttonLabel,
+  task,
+}) => {
+  const navigate = useNavigate();
+  const { handleCreateTask, handleUpdateTask } = useTasksContext();
   const {
     handleSubmit,
     register,
     formState: { errors },
+    setValue,
     reset,
   } = useForm();
 
+  useEffect(() => {
+    if (task) {
+      setValue("title", task.title);
+      setValue("description", task.description);
+    }
+  }, [task]);
+
   const onSubmit = handleSubmit((values) => {
-    handleCreateTask(values as TaskInput);
-    reset();
+    if (task) {
+      handleUpdateTask(task._id, values as TaskInput);
+      reset();
+      navigate("/tasks");
+    } else {
+      handleCreateTask(values as TaskInput);
+      reset();
+    }
   });
 
   return (
     <div className={`${AUTH_CONTAINER_CLASS}`}>
-      <AuthCards title={FormLabel.CREATE_TASK}>
+      <AuthCards title={formLabel}>
         <form onSubmit={onSubmit}>
           <input
             className={`${INPUT_CLASS}`}
@@ -49,12 +73,10 @@ const TaskForm: React.FC<TaskFormProps> = ({}) => {
             type="submit"
             className="btn btn-outline my-2 p-2"
           >
-            Create
+            {buttonLabel}
           </button>
         </form>
       </AuthCards>
     </div>
   );
 };
-
-export default TaskForm;
