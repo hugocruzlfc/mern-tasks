@@ -6,9 +6,11 @@ function App() {
   return (
     <AuthProvider>
       <TasksProvider>
-        <AppRouter />
+        <main className="container mx-auto px-4">
+          <AppRouter />
+          <Toaster />
+        </main>
       </TasksProvider>
-      <Toaster />
     </AuthProvider>
   );
 }

@@ -1,7 +1,7 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { TOAST_DESCRIPTIONS, TaskDataResponse, TaskInput } from "../types";
 import { toast } from "sonner";
-import { createTask, getTasks } from "../api";
+import { createTask, deleteTask, getTasks } from "../api";
 import { useAuthContext } from "./AuthContext";
 import { TasksContextProps } from "../types";
 
@@ -62,8 +62,29 @@ export const TasksProvider: React.FC<TasksProviderProps> = ({ children }) => {
     }
   };
 
+  const handleDeleteTask = async (id: string) => {
+    const toastLoading = toast.loading(TOAST_DESCRIPTIONS.LOADING);
+    try {
+      const response = await deleteTask(id);
+      if (response.status === 204) {
+        const newTasks = tasks.filter((task) => task._id !== id);
+        setTasks(newTasks);
+      }
+      toast.dismiss(toastLoading);
+      const toastSuccess = toast.success(TOAST_DESCRIPTIONS.TASK_DELETED);
+      toast.dismiss(toastSuccess);
+    } catch (error) {
+      console.log(error);
+      toast.error(TOAST_DESCRIPTIONS.ERROR);
+    } finally {
+      toast.dismiss(toastLoading);
+    }
+  };
+
   return (
-    <TasksContext.Provider value={{ tasks, handleCreateTask }}>
+    <TasksContext.Provider
+      value={{ tasks, handleCreateTask, handleDeleteTask }}
+    >
       {children}
     </TasksContext.Provider>
   );
