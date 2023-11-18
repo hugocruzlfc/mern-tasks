@@ -8,8 +8,16 @@ export interface TaskCardsProps {
 }
 
 export const TaskCards: React.FC<TaskCardsProps> = ({ task }) => {
-  const { handleDeleteTask } = useTasksContext();
+  const { handleDeleteTask, handleUpdateTask } = useTasksContext();
   const createdDate = new Date(task?.createdAt).toLocaleDateString();
+
+  const handleDoneTask = (taskID: string) => {
+    const taskUpdated = {
+      ...task,
+      done: true,
+    };
+    handleUpdateTask(taskID, taskUpdated);
+  };
 
   return (
     <div className="card card-normal bg-base-100 shadow-xl w-96 mb-4">
@@ -19,19 +27,35 @@ export const TaskCards: React.FC<TaskCardsProps> = ({ task }) => {
           <p className="text-slate-300">{createdDate}</p>
         </div>
         <p className="text-slate-300">{task?.description}</p>
-        <div className="card-actions justify-end">
-          <Link
-            className="btn btn-active btn-xs "
-            to={`/edit/${task._id}`}
-          >
-            Edit
-          </Link>
-          <button
-            className="btn  btn-xs bg-red-700"
-            onClick={() => handleDeleteTask(task._id)}
-          >
-            Delete
-          </button>
+
+        <div className="flex justify-between mt-5">
+          {!task?.done ? (
+            <span className="loading loading-spinner text-success"></span>
+          ) : (
+            <div className="badge badge-accent badge-outline">Done</div>
+          )}
+          <div className="flex justify-end">
+            <Link
+              className="btn btn-active btn-xs "
+              to={`/edit/${task._id}`}
+            >
+              Edit
+            </Link>
+            <button
+              className="btn  btn-xs bg-red-700 ml-2"
+              onClick={() => handleDeleteTask(task._id)}
+            >
+              Delete
+            </button>
+            {!task?.done && (
+              <button
+                className="btn  btn-xs btn-success ml-2"
+                onClick={() => handleDoneTask(task._id)}
+              >
+                Done
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
